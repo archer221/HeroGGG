@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<libs>
+	<lib url="assets/background.swf" key="background" type="swf" seria="0" version="2013010113"/>
+	<lib url="conf/MaskWord.xml" key="MaskWordXML" type="xml" seria="0" version="2013010113"/>
+</libs>
