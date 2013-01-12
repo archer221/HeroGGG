@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Monster ID="" Lib="" Key="" Type="0">
+	<MonsterIdleAction/>	<!--待机动作-->
+	<MonsterAttackAction/>	<!--攻击动作-->
+	<MonsterSeeScope Width="" Height="">		<!--怪物可视范围-->
+		<UnAttackAbalePosition X="" Y=""/>		<!--X、Y为相对怪物所在位置的偏移-->
+	</MonsterSeeScope>
+	<MonsterHp>100</MonsterHp>
+	<MonsterAttack>100</MonsterAttack>
+</Monster>

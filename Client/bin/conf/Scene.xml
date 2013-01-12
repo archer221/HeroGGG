@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scene ID="1" BackGroundLib="" BackGroundKey=""><!--一个大场景-->
-	<Map ID="1" LeftBackGroundLib="" LeftBackGroundKey="" RightBackGroundLib="" RightBackGroundKey="" Height="" Type=""><!--一个关卡-->
-		<Award HeroPoint="" Gold=""/>	<!--通关奖励-->
-		<Rect>
-			
-		</Rect>
-		<Obstacles><!--障碍物配置-->
-			<Obstacle X="" Y="" Lib="" Key=""/>
-		</Obstacles>
-		<Monsters><!--怪物配置-->
-			<Monster X="" Y="" MonsterId="" IsBoss=""/>
-		</Monsters>
-	</Map>
+<Scene ID="1" Name="" Desc="" Lib="" BackGroundKey=""><!--一个大场景-->
+	<SceneBtns>
+		<SceneBtn X="0" Y="0" BtnUpKey="" BtnOverKey="" BtnDownKey="" MapID="1"/>
+	</SceneBtns>
+	<Maps>
+		<Map ID="1" Name="" Desc="" MapLib="" LeftBackGroundKey="" RightBackGroundKey="" Brick="" Height="2000" Type="0" VictoryY="1500" VictoryKey=""><!--一个关卡-->
+			<Award HeroPoint="" Gold=""/>	<!--通关奖励-->
+			<BrickLayers>					<!--砖块上的花纹层-->
+				<BrickLayer Key="" />
+			</BrickLayers>
+			<Monsters><!--怪物配置,障碍物也是怪物的一种-->
+				<Monster X="" Y="" MonsterId=""/>
+			</Monsters>
+		</Map>
+	</Maps>
 </Scene>
-
-<Monster ID="" Lib="" Key="">
-	<MonsterIdleAction/>	<!--待机动作-->
-	<MonsterAttackAction/>	<!--攻击动作-->
-	<MonsterSeeScope Width="" Height="">		<!--怪物可视范围-->
-		<UnAttackAbalePosition X="" Y=""/>		<!--X、Y为相对怪物所在位置的偏移-->
-	</MonsterSeeScope>
-	<MonsterHp>100</MonsterHp>
-	<MonsterAttack>100</MonsterAttack>
-</Monster>
