@@ -544,6 +544,17 @@ package com.net
 			}
 			return _shoplib;
 		}
+		
+		
+		private var _sceneTemplateLib : LibData;
+		public function get SceneTemplateLib():LibData
+		{
+			if (_sceneTemplateLib == null)
+			{
+				_sceneTemplateLib = GetLibData("SceneTemplate");
+			}
+			return _sceneTemplateLib;
+		}
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 

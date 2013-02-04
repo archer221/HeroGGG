@@ -1,20 +1,24 @@
 package Fight.SceneConfig 
 {
 	import com.model.Map;
+	import com.net.LibsManager;
+	import com.net.RESManager;
 	/**
 	 * ...
 	 * @author ZWQ
 	 */
 	public class SceneTemplateContainer extends Map
 	{
+		public static const Instance : SceneTemplateContainer = new SceneTemplateContainer();
 		
 		public function SceneTemplateContainer() 
 		{
 			
 		}
 		
-		public function ParseXML(xm : XML) : void
+		public function ParseXML() : void
 		{
+			var xm : XML = RESManager.getXML(LibsManager.Instance.SceneTemplateLib.key);
 			var sceneTemplate : SceneTemplate;
 			for each(var scenexml : XML in xml.*)
 			{

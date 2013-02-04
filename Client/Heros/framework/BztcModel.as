@@ -1,5 +1,6 @@
 package framework 
 {
+	import Fight.SceneConfig.SceneTemplateContainer;
 	import framework.FKPPInfoCode;
 	import com.model.LocalSO;
 	import com.net.ServerLoadModel;
@@ -188,6 +189,7 @@ package framework
 		{
 			if ( bdoFirstLoad ) return;
 			ThemeSkinManager.Init();
+			SceneTemplateContainer.Instance.ParseXML();
 			bdoFirstLoad = true;
 		}
 		
