@@ -18,7 +18,7 @@ package Fight.SceneConfig
 		
 		public function ParseXML() : void
 		{
-			var xm : XML = RESManager.getXML(LibsManager.Instance.SceneTemplateLib.key);
+			var xml : XML = RESManager.getXML(LibsManager.Instance.SceneTemplateLib.key);
 			var sceneTemplate : SceneTemplate;
 			for each(var scenexml : XML in xml.*)
 			{

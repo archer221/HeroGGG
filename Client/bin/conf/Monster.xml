@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Monster ID="" Lib="" Key="" Type="0">
+<Monster ID="1" Lib="" Key="" Type="0">
 	<MonsterIdleAction/>	<!--待机动作-->
 	<MonsterAttackAction/>	<!--攻击动作-->
 	<MonsterSeeScope Width="" Height="">		<!--怪物可视范围-->
