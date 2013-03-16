@@ -20,6 +20,7 @@ package com.RichTextArea
 		public static const ItemButton : String = "%";
 		public static const PayButton : String = "^";
 		public static const VipButton:String = "!";
+		public static const VipMundeButton:String = "/";
 		public static const RegionNameButton : String = "*";
 		
 		public var itemTipFunc : Function;

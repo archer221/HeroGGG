@@ -78,7 +78,7 @@ package com.net {
 		{
 			if ( loadstep == -1 ) 
 			{
-				if ( _list.length > 0 )
+				if ( _list.length > 0 || !(DictionaryUtil.isEmpty(_wait)) )
 				{
 					return false;
 				}
@@ -273,7 +273,7 @@ package com.net {
 		protected var loadstep : int = -1;
 		public function load(step : int) : void {
 			loadstep = step;
-			if((_list.length == 0 || HaveNoCurStep()) && _model.isEmpty()) {
+			if(((_list.length == 0 &&DictionaryUtil.isEmpty(_wait)) || HaveNoCurStep()) && _model.isEmpty()) {
 				_model.end();
 				dispatchEvent(new Event(Event.COMPLETE));
 				return;
@@ -308,6 +308,26 @@ package com.net {
 				}
 			}
 			return notloadary;
+		}
+		public function GetLoadPercent():Number
+		{
+			var cur:Number = 0;
+			var totoalpercent : Number = 0;
+			for each( var loader : ALoader in _wait )
+			{
+				totoalpercent++;
+				if ( loader.loadData != null )
+				{
+					cur += loader.loadData.percent;
+				}
+			}
+			if ( totoalpercent != 0 )
+			{
+				cur = cur / (totoalpercent * 100);	
+				return cur;
+			}
+			return 0;
+			
 		}
 	}
 }

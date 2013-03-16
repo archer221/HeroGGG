@@ -1,5 +1,6 @@
 package com.ui.data {
 	import com.net.AssetData;
+	import com.net.LibsManager;
 	import com.ui.core.ScaleMode;
 	import com.ui.core.UIComponentData;
 
@@ -41,7 +42,8 @@ package com.ui.data {
 		}
 
 		public function ToolTipData() {
-			backgroundAsset = new AssetData("ListImage","uicommon");
+			backgroundAsset = new AssetData("TipsBigbg", LibsManager.Instance.uicommon.key);
+			//effecttimeAsset = new AssetData("TipsHeadbg", LibsManager.Instance.uicommon.key);
 			padding = 5;
 			alginMode = 5;
 			minWidth = 295;

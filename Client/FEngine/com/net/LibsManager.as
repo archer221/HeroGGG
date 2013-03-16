@@ -104,7 +104,15 @@ package com.net
 			}
 			return _taskGuardLib;
 		}
-		
+		private var _soundsLib:LibData;
+		public function get soundsLib():LibData
+		{
+			if ( _soundsLib == null )
+			{
+				_soundsLib = GetLibData("sounds");
+			}
+			return _soundsLib;
+		}
 		private var _iconassets:LibData;
 		public function get iconassets():LibData
 		{
@@ -123,6 +131,26 @@ package com.net
 				_fightcommon = GetLibData("fightcommon");
 			}
 			return _fightcommon;
+		}
+		
+		private var _competition:LibData;
+		public function get competitionlib():LibData
+		{
+			if ( _competition == null )
+			{
+				_competition = GetLibData("Competition");
+			}
+			return _competition;
+		}
+		
+		private var _competitionResult:LibData;
+		public function get competitionResultlib():LibData
+		{
+			if ( _competitionResult == null )
+			{
+				_competitionResult = GetLibData("competitionResult");
+			}
+			return _competitionResult;
 		}
 		
 		private var _tutoriallib : LibData;
@@ -170,6 +198,24 @@ package com.net
 			}
 			return _roomlib;
 		}
+		private var _fightroomlib : LibData;
+		public function get fightroomlib():LibData
+		{
+			if ( _fightroomlib == null )
+			{
+				_fightroomlib = GetLibData("fightroom");
+			}
+			return _fightroomlib;
+		}
+		private var _barlib : LibData;
+		public function get barlib():LibData
+		{
+			if ( _barlib == null )
+			{
+				_barlib = GetLibData("bar");
+			}
+			return _barlib;
+		}
 		private var _createrolelib:LibData;
 		public function get createrolelib():LibData
 		{
@@ -197,6 +243,17 @@ package com.net
 			}
 			return _avatarxmllib;
 		}
+		
+		private var _invitelib : LibData;
+		public function get invitelib():LibData
+		{
+			if ( _invitelib == null )
+			{
+				_invitelib = GetLibData("Invite");
+			}
+			return _invitelib;
+		}
+		
 		private var _materialxmllib : LibData;
 		public function get materialxmllib():LibData
 		{
@@ -316,6 +373,17 @@ package com.net
 			}
 			return _maskWordLib;
 		}
+		
+		private var _barAction : LibData;
+		public function get barActionLib():LibData
+		{
+			if ( _barAction == null )
+			{
+				_barAction = GetLibData("BarActionXML");
+			}
+			return _barAction;
+		}
+		
 		private var _roleLevelLib : LibData;
 		public function get roleLevelLib():LibData
 		{
@@ -334,6 +402,26 @@ package com.net
 				_themeMapXml = GetLibData("thememapXML");
 			}
 			return _themeMapXml;
+		}
+		
+		private var _instancemapXml : LibData;
+		public function get instancemapXml():LibData
+		{
+			if ( _instancemapXml == null )
+			{
+				_instancemapXml = GetLibData("instancemap");
+			}
+			return _instancemapXml;
+		}
+		
+		private var _configitemsXml : LibData;
+		public function get configitemXml():LibData
+		{
+			if ( _configitemsXml == null )
+			{
+				_configitemsXml = GetLibData("ConfigItems");
+			}
+			return _configitemsXml;
 		}
 		
 		private var _sceneObjXml : LibData;
@@ -364,6 +452,16 @@ package com.net
 				_fightMapXMLLib = GetLibData("fightmapXML");
 			}
 			return _fightMapXMLLib;
+		}
+		
+		private var _talentinfoXMLLib : LibData;
+		public function get talentinfoXMLLib():LibData
+		{
+			if ( _talentinfoXMLLib == null )
+			{
+				_talentinfoXMLLib = GetLibData("talentinfoXML");
+			}
+			return _talentinfoXMLLib;
 		}
 		
 		private var _useTipsXMLLib : LibData;
@@ -534,7 +632,15 @@ package com.net
 			}
 			return _addHpLib;
 		}
-		
+		private var _ComposeLib : LibData;
+		public function get AddComposeLib() : LibData
+		{
+			if (_ComposeLib == null)
+			{
+				_ComposeLib = GetLibData("ComposeParam");
+			}
+			return _ComposeLib;
+		}
 		private var _shoplib : LibData;
 		public function get ShopLib():LibData
 		{
@@ -544,8 +650,74 @@ package com.net
 			}
 			return _shoplib;
 		}
+		private var _weaponpracticeLib : LibData;
+		public function get weaponpracticeLib() : LibData
+		{
+			if (_addHpLib == null)
+			{
+				_addHpLib = GetLibData("weaponPracticeXML");
+			}
+			return _addHpLib;
+		}
 		
+		private var _viplib : LibData;
+		public function get VIPLib() : LibData
+		{
+			if (_viplib == null)
+			{
+				_viplib = GetLibData("VIP");
+			}
+			return _viplib;
+		}
 		
+		private var _loginlib : LibData;
+		public function get LoginLib() : LibData
+		{
+			if (_loginlib == null)
+			{
+				_loginlib = GetLibData("continuouslogin");
+			}
+			return _loginlib;
+		}
+		
+		private var _vipranklib : LibData;
+		public function get VIPRankLib() : LibData
+		{
+			if (_vipranklib == null)
+			{
+				_vipranklib = GetLibData("VipRank");
+			}
+			return _vipranklib;
+		}
+		
+		private var _weaponpracticed : LibData;
+		public function get WeaponpracticedLib() : LibData
+		{
+			if (_weaponpracticed == null)
+			{
+				_weaponpracticed = GetLibData("weaponpracticed");
+			}
+			return _weaponpracticed;
+		}		
+		private var _monsterxml : LibData;
+		public function get monsterxml() : LibData
+		{
+			if (_monsterxml == null)
+			{
+				_monsterxml = GetLibData("monsterxml");
+			}
+			return _monsterxml;
+		}
+		
+		private var _monstersvxml : LibData;
+		public function get monstersvxml() : LibData
+		{
+			if (_monstersvxml == null)
+			{
+				_monstersvxml = GetLibData("monstersvxml");
+			}
+			return _monstersvxml;
+		}
 		private var _sceneTemplateLib : LibData;
 		public function get SceneTemplateLib():LibData
 		{

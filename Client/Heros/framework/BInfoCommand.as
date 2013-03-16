@@ -12,6 +12,7 @@ package framework
 		public var _flag : int;
 		public var _showtype : int;
 		public var _callback:CallBackFuntion;
+		public var _sInfo : String = null;
 		public function BInfoCommand(tcmd:String,iinfocode : int,sender: Object,tflag: int,tshowtype : int,callbackfunc:CallBackFuntion) 
 		{
 			super(tcmd);

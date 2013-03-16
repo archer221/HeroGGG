@@ -128,6 +128,14 @@ package com.ui.manager {
 					//target.toolTip.moveTo(offset.x, offset.y);
 					target.toolTip.moveTo(x, y);
 				}
+				else if (target.toolTip.data.alginMode == 6)
+				{
+					//var x:int = target.x - target.toolTip.width + 45;
+					//var y:int = target.y + 5;
+					//target.toolTip.moveTo(x, y);
+					target.parent.addChild(target.toolTip);
+					return;
+				}
 				UIManager.root.addChild(target.toolTip);
 			}
 		}

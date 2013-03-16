@@ -188,6 +188,8 @@ package framework
 		///////////////////////////////////Init Event Listener//////////////////////////////////////
 		public function InitEventListener():void
 		{
+			//village
+			//BztcFacade.Instance.AddExceptCmdListener(EventEnum.server_EnterVillage, new BCmdHandler(this, OnExceptionCmdHandlerWait));
 			//load
 			BztcFacade.Instance.AddExceptCmdListener(EventEnum.load_Wait, new BCmdHandler(this, OnExceptionCmdHandlerWait));
 		}

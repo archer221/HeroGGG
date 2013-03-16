@@ -42,7 +42,7 @@ package loading
 				m_fullScreenLoadMonitor.show();
 				m_windowLoadMonitor.hide();
 			}
-			else if (_model.LoadType == LoadTypeEnum.WindScreenSuspendLoad)
+			else if (_model.LoadType == LoadTypeEnum.WindScreenSuspendLoad||_model.LoadType == LoadTypeEnum.ServerLoad)
 			{
 				m_fullScreenLoadMonitor.hide();
 				m_windowLoadMonitor.show();
@@ -82,6 +82,8 @@ package loading
 			if (_model.LoadType == LoadTypeEnum.FullScreenSuspendLoad)
 				m_fullScreenLoadMonitor.model = value;
 			else if (_model.LoadType == LoadTypeEnum.WindScreenSuspendLoad)
+				m_windowLoadMonitor.model = value;
+			else if ( _model.LoadType == LoadTypeEnum.ServerLoad )
 				m_windowLoadMonitor.model = value;
 		}
 	}

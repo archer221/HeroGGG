@@ -88,8 +88,8 @@ package com.ui.controls {
 		}
 
 		protected function addAlerts() : void {
-			_remove_alert = new Alert(_girdData.alertData);
-			_remove_alert.AddEventListenerEx(Event.CLOSE,this,remove_closeHandler);
+			//_remove_alert = new Alert(_girdData.alertData);
+			//_remove_alert.AddEventListenerEx(Event.CLOSE,this,remove_closeHandler);
 			var data : AlertData = _girdData.alertData.clone();
 			data.labelData.text = "请输入拆分数量:";
 			data.textInputData = new TextInputData();
@@ -308,9 +308,12 @@ package com.ui.controls {
 					if(_dragData.state == DragState.REMOVE) {
 						dragEnd();
 						var count : int = (_dragData.splitCount == 0 ? _dragData.source.count : _dragData.splitCount);
-						_remove_alert.label = "你真的要删除 [" + _dragData.source.name + "] " + count + "个?";
-						_remove_alert.show();
-						GLayout.layout(_remove_alert);
+						var slabel : String = "你真的要删除 [" + _dragData.source.name + "] " + count + "个?";
+						_dragData.source.beginRemove(slabel);
+						//var count : int = (_dragData.splitCount == 0 ? _dragData.source.count : _dragData.splitCount);
+						//_remove_alert.label = "你真的要删除 [" + _dragData.source.name + "] " + count + "个?";
+						//_remove_alert.show();
+						//GLayout.layout(_remove_alert);
 						return;
 					}
 					if(_dragData.state == DragState.MOVE) {
@@ -380,8 +383,9 @@ package com.ui.controls {
 			MouseApp.Instance.show();
 		}
 
-		private function remove_closeHandler(event : Event) : void {
-			var detail : uint = _remove_alert.detail;
+		private function remove_closeHandler(ary : Array) : void {
+			if (ary.length <= 0) return;
+			var detail : uint = ary[0];
 			if(detail == Alert.YES) {
 				if(_dragData.splitCount == 0) {
 					//_model.setAt(_selectionModel.index, null);

@@ -134,12 +134,15 @@ package com.ui.controls {
 			var buttonWidth : int = (_alertData.flag == Alert.NONE ? 0 : numButtons * _alertData.buttonData.width + (numButtons - 1) * _alertData.hgap + _data.padding * 2);
 			var buttonHeight : int = (_alertData.flag == Alert.NONE ? 0 : _alertData.buttonData.height);
 			_width = Math.max(_data.minWidth, labelWidth, textInputWidth, buttonWidth);
-			_height = Math.max(_data.minHeight, labelHeight + textInputHeight + buttonHeight + _data.padding * 2);
+			_height = Math.max(_data.minHeight, labelHeight + textInputHeight + buttonHeight + _data.padding * 2) + 40;
 			_label.x = int((_width - labelWidth) * 0.5);
-			_label.y = int((_height - labelHeight - textInputHeight - buttonHeight - _data.padding * 2) * 0.5);
+			if(_alertData.flag != Alert.NONE)
+				_label.y = int((_height - labelHeight - textInputHeight - buttonHeight - _data.padding * 2) * 0.5+15);
+			else
+				_label.y = int((_height - labelHeight - textInputHeight - buttonHeight - _data.padding * 2) * 0.5-10);
 			if(_textInput) {
 				_textInput.x = int((_width - textInputWidth) * 0.5);
-				_textInput.y = _label.height + _alertData.vgap;
+				_textInput.y = _label.y + _label.height + _alertData.vgap + 5;
 				GLayout.layout(_textInput);
 			}
 			if(_alertData.flag != Alert.NONE) {

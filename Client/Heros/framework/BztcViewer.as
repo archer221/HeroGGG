@@ -16,6 +16,7 @@ package framework
 	import com.utils.GStringUtil;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
 	import loading.FKPPLoadMonitor;
 	/**
@@ -43,23 +44,65 @@ package framework
 		private function InitInfo():void
 		{
 			var data : AlertData = new AlertData();
-			data.padding =15;
-			data.buttonData.width = 71;
-			data.buttonData.height =32;
+			data.bgAsset = new AssetData("PromptBox", "uicommon");
+			data.padding = 15;
+			data.buttonData.width = 81;
+			data.buttonData.height = 40;
 			data.buttonData.labelData.text = "";
-			data.yesbuttonData.width = 71;
-			data.yesbuttonData.height = 32;
-			data.nobuttonData.width = 71;
-			data.nobuttonData.height = 32;
-			data.cancelbuttonData.width = 71;
-			data.cancelbuttonData.height = 32;
+			data.buttonData.setSkinData("uicommon_btn_confirm");
+			data.yesbuttonData.width = 81;
+			data.yesbuttonData.height = 40;
+			data.yesbuttonData.setSkinData("uicommon_btn_confirm");
+			data.nobuttonData.width = 81;
+			data.nobuttonData.height = 40;
+			data.nobuttonData.setSkinData("uicommon_btn_cancel");
+			data.cancelbuttonData.width = 81;
+			data.cancelbuttonData.height = 40;
+			data.cancelbuttonData.setSkinData("uicommon_btn_cancel");
+			data.okbuttonData.width = 81;
+			data.okbuttonData.height = 40;
+			
 			data.parent = UIManager.root;
 			data.flag = Alert.OK;
 			info = new Alert(data);
-			data = data.clone();
+			
 			info.addEventListener(Event.CLOSE, OnClientAlertInfoClose_Handler);
 			BztcFacade.Instance.AddCmdListener(EventEnum.EventInfo, new BCmdHandler(this, OnGameInfo));
 			BztcFacade.Instance.AddCmdListener(EventEnum.HideInfo, new BCmdHandler(this, OnGameInfoHide));
+		}
+		
+		public function resetAlert():void
+		{
+			if (info != null)
+			{
+				info.removeEventListener(Event.CLOSE, OnClientAlertInfoClose_Handler);
+				info.removeEventListener(Event.CLOSE, info_closeHandler);
+				info.dispose();
+			}
+			var data : AlertData = new AlertData();
+			data.bgAsset = new AssetData("PromptBox", "uicommon");
+			data.padding = 15;
+			data.buttonData.width = 81;
+			data.buttonData.height = 40;
+			data.buttonData.labelData.text = "";
+			data.buttonData.setSkinData("uicommon_btn_confirm");
+			data.yesbuttonData.width = 81;
+			data.yesbuttonData.height = 40;
+			data.yesbuttonData.setSkinData("uicommon_btn_confirm");
+			data.nobuttonData.width = 81;
+			data.nobuttonData.height = 40;
+			data.nobuttonData.setSkinData("uicommon_btn_cancel");
+			data.okbuttonData.width = 81;
+			data.okbuttonData.height = 40;
+			data.okbuttonData.setSkinData("uicommon_btn_confirm");
+			data.cancelbuttonData.width = 81;
+			data.cancelbuttonData.height = 40;
+			data.cancelbuttonData.setSkinData("uicommon_btn_cancel");
+			data.parent = UIManager.root;
+			data.flag = Alert.OK;
+			info = new Alert(data);
+			info.addEventListener(Event.CLOSE, OnClientAlertInfoClose_Handler);
+			info.addEventListener(Event.CLOSE, info_closeHandler);
 		}
 		protected function OnClientAlertInfoClose_Handler(event : Event) : void
 		{
@@ -67,10 +110,13 @@ package framework
 			if (alert == null) return;
 			if ( curinfocmd != null )
 			{
-				if ( (((alert.detail & Alert.CANCEL)==0) && ((alert.detail & Alert.NO)==0) ))
+				var ary : Array = new Array();
+				ary.push(alert.detail);
+				if (curinfocmd._callback != null)
 				{
-					if(curinfocmd._callback != null)
-						curinfocmd._callback.Exec();
+					if (curinfocmd._callback == null) return;
+					curinfocmd._callback.setparam(ary);
+					curinfocmd._callback.Exec();
 				}
 			}
 			//var _clientAlertInfo : DisplayAlertInfo = info.source as DisplayAlertInfo;
@@ -87,6 +133,7 @@ package framework
 		//}
 		public function Init()
 		{
+			InitMediator();
 			InitInfo();
 			//InitRoleMenu();
 			InitBg();
@@ -124,6 +171,11 @@ package framework
 				_load_lm.show();
 			}
 			return 0;
+		}
+		
+		public function get load_lm():FKPPLoadMonitor
+		{
+			return _load_lm;
 		}
 		
 		public function OnLoadFaild( cmd : BCommand ):int
@@ -206,7 +258,10 @@ package framework
 			if ( infocmd != null )
 			{
 				curinfocmd = infocmd;
-				info.label = FKPPInfoCode.InfoCodeArray[infocmd._infocode];
+				if (infocmd._sInfo != null)
+					info.label = infocmd._sInfo;
+				else
+					info.label = FKPPInfoCode.InfoCodeArray[infocmd._infocode];
 				info.flag = infocmd._flag;//Alert.OK;
 				
 				if( infocmd._showtype == 0 )
@@ -261,7 +316,19 @@ package framework
 		//}
 		/////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////logic////////////////////////////////////////////////////////
+		private function InitMediator():void
+		{
+			//CreateRole
+			//var tmediator : IMediator = new CreateRoleMediator();
+			//mediatorMap.put("CreateRolepanel", tmediator);
+			//MediatorMgr.Instance.createroleMediator;
+		}
 		
+		public function GetMediator(panelname : String): IMediator
+		{
+			return mediatorMap.getBy(panelname);
+		}
+///////////////////////////////////////////////////////////////////////////////////////////
 	}
 
 }

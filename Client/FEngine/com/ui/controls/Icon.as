@@ -136,7 +136,7 @@ package com.ui.controls {
 			}
 		}
 		
-		private var callbackFun:CallBackFuntion;
+		private var callbackFun : CallBackFuntion;
 		public function bitmmapDataCallback( asetdata : AssetData, callbackfunc : CallBackFuntion ):void
 		{
 			callbackFun = callbackfunc;
@@ -150,7 +150,7 @@ package com.ui.controls {
 			{
 				bitmapdata = callbackFun.ExecR();
 			}
-			else
+			else if (LibsManager.Instance.GetLibData(curloadasset.libId) != null)
 			{
 				if ( _data.loadingsprte != null )
 				{

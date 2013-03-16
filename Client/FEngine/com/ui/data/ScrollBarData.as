@@ -18,6 +18,10 @@ package com.ui.data {
 		public var trackAsset : AssetData = new AssetData(SkinStyle.scrollBar_trackSkin);
 
 		public var thumbButtonData : ButtonData;
+		
+		public var upButtonData:ButtonData;
+		
+		public var downButtonData:ButtonData;
 
 		public var direction : int = VERTICAL;
 
@@ -29,6 +33,8 @@ package com.ui.data {
 			if(data == null)return;
 			data.trackAsset = trackAsset;
 			data.thumbButtonData = (thumbButtonData ? thumbButtonData.clone() : null);
+			data.upButtonData = (upButtonData? upButtonData.clone():null);
+			data.downButtonData = (downButtonData? downButtonData.clone():null);
 			data.direction = direction;
 			data.wheelSpeed = wheelSpeed;
 		}
@@ -39,6 +45,16 @@ package com.ui.data {
 			thumbButtonData.overAsset = new AssetData(SkinStyle.scrollBar_thumbOverSkin);
 			thumbButtonData.downAsset = new AssetData(SkinStyle.scrollBar_thumbDownSkin);
 			thumbButtonData.disabledAsset = null;
+			upButtonData = new ButtonData();
+			upButtonData.upAsset = new AssetData(SkinStyle.scrollBar_thumbUpSkin);
+			upButtonData.overAsset = new AssetData(SkinStyle.scrollBar_thumbOverSkin);
+			upButtonData.downAsset = new AssetData(SkinStyle.scrollBar_thumbDownSkin);
+			upButtonData.disabledAsset = null;
+			downButtonData = new ButtonData();
+			downButtonData.upAsset = new AssetData(SkinStyle.scrollBar_thumbUpSkin);
+			downButtonData.overAsset = new AssetData(SkinStyle.scrollBar_thumbOverSkin);
+			downButtonData.downAsset = new AssetData(SkinStyle.scrollBar_thumbDownSkin);
+			downButtonData.disabledAsset = null;
 			width = 14;
 			height = 100;
 		}

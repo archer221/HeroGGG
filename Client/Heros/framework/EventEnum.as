@@ -24,6 +24,10 @@ package framework
 		public static const SystemStopSuspend : String = "50001";
 		public static const EventInfo : String = "50002";
 		public static const HideInfo : String = "50003";
+		
+		//gamecontrol
+		public static const Keycommand : String = "40";
+		public static const Keyuseitemcommand : String = "41";
 	}
 
 }

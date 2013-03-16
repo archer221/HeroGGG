@@ -1,30 +1,40 @@
 package framework 
 {
-	import Fight.SceneConfig.SceneTemplateContainer;
-	import framework.FKPPInfoCode;
-	import com.model.LocalSO;
-	import com.net.ServerLoadModel;
-	import com.sound.SettingData;
 	import com.frame.FrameTimer;
 	import com.frame.TimerManager;
+	import com.model.LocalSO;
 	import com.model.Map;
 	import com.net.LibData;
 	import com.net.LibsManager;
 	import com.net.RESManager;
 	import com.net.SWFLoader;
+	import com.net.ServerLoadModel;
 	import com.net.XMLLoader;
+	import com.sound.SettingData;
 	import com.ui.core.EventTargetCollect;
 	import com.ui.manager.CallBackFuntion;
 	import com.ui.manager.ThemeSkinManager;
 	import com.ui.mediator.IMediator;
+	
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
-	import logic.LoginModel;
-	import mx.core.ByteArrayAsset;
-	import flash.utils.getTimer;
 	import flash.utils.Timer;
+	import flash.utils.getTimer;
+	
+	import mx.core.ByteArrayAsset;
+	
+	import Fight.SceneConfig.SceneTemplateContainer;
+	
+	import control.GameControl;
+	
+	import core.TrickSleepModel;
+	
+	import framework.FKPPInfoCode;
+	
+	import logic.LoginModel;
+	
 	import sound.SoundManager;
 	/**
 	 * ...
@@ -46,6 +56,7 @@ package framework
 		public static var shutuparr:Array = new Array();
 		private var bFirstCreaterole: Boolean = false;
 		public static var loginmodel : LoginModel = new LoginModel();
+		public var gamecontrol :GameControl;
 		public function BztcModel() 
 		{
 			//_GameMainUpdate = new GameMainUpdate();
@@ -63,11 +74,13 @@ package framework
 			initSetttings();
 			initEventListener();
 			initModels();
+			gamecontrol = new GameControl();
 
 		}
 		private function initModels():void
 		{
 			MediatorMgr.Instance.Init();
+			TrickSleepModel.Intance.init();
 			loginmodel.connectserver();
 		}
 		private function InitScene():void

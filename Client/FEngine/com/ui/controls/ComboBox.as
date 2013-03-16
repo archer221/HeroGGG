@@ -85,7 +85,8 @@
 			_button.addEventListener(MouseEvent.CLICK, clickHandler);
 			_arrow.addEventListener(MouseEvent.CLICK, clickHandler);
 			_list.addEventListener(Cell.SINGLE_CLICK, list_singleClickHandler);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, stage_mouseDownHandler);
+			if( stage!= null )
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, stage_mouseDownHandler);
 		}
 
 		override protected function onHide() : void {

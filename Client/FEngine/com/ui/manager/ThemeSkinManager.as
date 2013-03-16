@@ -1,5 +1,7 @@
 package com.ui.manager 
 {
+	import BZTC.debug.ErrorEnum;
+	import BZTC.role.data.NullRole;
 	import com.net.LibsManager;
 	import com.net.RESManager;
 	import flash.display.Sprite;

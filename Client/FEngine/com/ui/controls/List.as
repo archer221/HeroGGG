@@ -474,11 +474,15 @@ package com.ui.controls {
 		public function get model() : ListModel {
 			return _model;
 		}
-
+		
 		public function get selectionCell() : Cell {
 			return _cells[_selectionModel.index];
 		}
-
+		
+		public function get Cells() : Array {
+			return _cells;
+		}
+		
 		public function get selection() : Object {
 			return _model.getAt(_selectionModel.index);
 		}

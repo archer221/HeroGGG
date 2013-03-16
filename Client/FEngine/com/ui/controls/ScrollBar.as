@@ -5,7 +5,7 @@ package com.ui.controls {
 	import com.ui.manager.UIManager;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-
+	import com.ui.core.ScaleMode;
 
 	/**
 	 * @version 20091215
@@ -18,6 +18,10 @@ package com.ui.controls {
 		protected var _trackSkin : Sprite;
 
 		protected var _thumb_btn : Button;
+		
+		protected var _up_btn:Button;
+		
+		protected var _down_btn:Button;
 
 		protected var _direction : int;
 
@@ -51,15 +55,23 @@ package com.ui.controls {
 		override protected function create() : void {
 			_trackSkin = UIManager.getUI(_data.trackAsset);
 			_thumb_btn = new Button(_data.thumbButtonData);
+			_up_btn = new Button(_data.upButtonData);
+			_down_btn = new Button(_data.downButtonData);
+			_down_btn.scaleY = -1;
 			addChild(_trackSkin);
 			addChild(_thumb_btn);
+			addChild(_up_btn);
+			addChild(_down_btn);
 			direction = _data.direction;
 		}
 
 		override protected function layout() : void {
+			//_thumb_btn._base.scaleMode = ScaleMode.AUTO_HEIGHT;
 			_trackSkin.width = _width;
 			_trackSkin.height = _height;
 			_thumb_btn.width = _width;
+			//_thumb_btn.width = _data.thumbButtonData.width;
+			//_thumb_btn.height = _data.thumbButtonData.height;
 			reset();
 		}
 
@@ -70,9 +82,28 @@ package com.ui.controls {
 				_thumb_btn.visible = false;
 			} else {
 				_thumb_btn.height = Math.max(12, Math.round(_pageSize / per * _trackSkin.height));
+				_thumb_btn.height = 100;
+				trace( " _thumb_btn.height = "+Math.round(_pageSize / per * _trackSkin.height))
+				//_thumb_btn.height =  Math.max(12, _data.thumbButtonData.height);
 				_thumb_btn.y = Math.round((_trackSkin.height - _thumb_btn.height) * (_value - _min) / (_max - _min));
 				_thumb_btn.visible = true;
 			}
+			if (_value <= _min)
+			{
+				_up_btn.enabled = false;
+				_down_btn.enabled = true;
+			}
+			else if (_value >= (_max - _min))
+			{
+				_down_btn.enabled = false;
+				_up_btn.enabled = true;
+			}
+			else
+			{
+				_up_btn.enabled = true;
+				_down_btn.enabled = true;
+			}
+			
 		}
 
 		protected function set direction(value : int) : void {
@@ -88,11 +119,15 @@ package com.ui.controls {
 
 		override protected function onShow() : void {
 			_thumb_btn.addEventListener(MouseEvent.MOUSE_DOWN, thumb_mouseDownHandler);
+			_up_btn.addEventListener(MouseEvent.CLICK, up_Handler);
+			_down_btn.addEventListener(MouseEvent.CLICK, down_Handler);
 		}
 
 		override protected function onHide() : void {
 			if( _thumb_btn != null )
 				_thumb_btn.removeEventListener(MouseEvent.MOUSE_DOWN, thumb_mouseDownHandler);
+			_up_btn.removeEventListener(MouseEvent.CLICK, up_Handler);
+			_down_btn.removeEventListener(MouseEvent.CLICK, down_Handler);
 		}
 
 		protected function thumb_mouseDownHandler(event : MouseEvent) : void {
@@ -109,6 +144,30 @@ package com.ui.controls {
 				_value = newScrollPosition;
 				reset();
 				dispatchEvent(new GScrollBarEvent(_direction, _value - oldScrollPosition, _value));
+			}
+		}
+		
+		protected function up_Handler(event:MouseEvent):void
+		{
+			if (_value > 0)
+			{
+				_value = _value - 3;
+				if (_value < 0)
+					_value = 0;
+				reset();
+				dispatchEvent(new GScrollBarEvent(_direction, -3, _value));
+			}
+		}
+		
+		protected function down_Handler(event:MouseEvent):void
+		{
+			if (_value < (_max - _min))
+			{
+				_value = _value + 3;
+				if (_value > (_max - _min))
+					_value = _max - _min;
+				reset();
+				dispatchEvent(new GScrollBarEvent(_direction, 3, _value));
 			}
 		}
 
@@ -168,7 +227,7 @@ package com.ui.controls {
 				isChange = true;
 			}
 			if(isUpdate)reset();
-			if(isChange)dispatchEvent(new GScrollBarEvent(_direction, _value - _old, _value));
+			if (isChange) dispatchEvent(new GScrollBarEvent(_direction, _value - _old, _value));
 		}
 
 		public function get scrollPosition() : int {

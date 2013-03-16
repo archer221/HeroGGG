@@ -709,7 +709,20 @@ package com.RichTextArea
 			_format.size = _item.height;
 			_format.font = textButtonInfo.buttonStr + BUTTONSEPARATOR + textButtonInfo.buttonType;
 			_format.letterSpacing = _item.width - getTxtWidth(_item.height);
-			_format.underline = true;
+			if (textButtonInfo.buttonType.localeCompare(TextButtonInfo.ItemButton) == 0 && itemNameGetFuc != null)
+			{
+				_format.underline= false;
+			}
+			else
+			{
+				_format.underline = true;
+			}
+			
+			if (textButtonInfo.buttonType.localeCompare(TextButtonInfo.VipMundeButton) == 0)
+			{
+				_format.underline = false;
+			}
+			
 			_format.color = _butUnderColor;
 			
 			if (!bSetHeight) 
@@ -1076,6 +1089,12 @@ package com.RichTextArea
 				buttondata.labelData.textColor = 0xffffff;
 				buttondata.rollOverColor = 0xffffff;
 				_butUnderColor = 0xffffff;
+			}
+			else if(textbuttoninfo.buttonType.localeCompare(TextButtonInfo.VipMundeButton) == 0)
+			{
+				labelstr = "[" + textbuttoninfo.buttonStr.substr(3, textbuttoninfo.buttonStr.length - 5) + "]";
+				buttondata.labelData.textColor = 65535;
+				buttondata.rollOverColor =65535;
 			}
 			buttondata.height = _defaultFormat.size == null ? 12 : int(_defaultFormat.size);
 			buttondata.width = getButtonTxtWidth(buttondata.height, labelstr) + 2;

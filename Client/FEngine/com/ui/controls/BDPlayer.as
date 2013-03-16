@@ -1,5 +1,5 @@
 package com.ui.controls {
-	import BZTC.framework.CallBackFuntion;
+	import com.ui.manager.CallBackFuntion
 	import com.bd.BDData;
 	import com.bd.BDUnit;
 	import com.core.IDispose;

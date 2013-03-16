@@ -6,10 +6,11 @@ package sound {
 	import com.sound.SoundItem;
 	import com.utils.MathUtil;
 	import flash.utils.getTimer;
-
+	import com.net.LibsManager;
 	import flash.events.Event;
 	import flash.media.Sound;
 	import flash.net.URLRequest;
+	import framework.*;
 
 	/**
 	 * ...
@@ -34,6 +35,8 @@ package sound {
 		private var settindata :SettingData;
 		
 		private var soundlibkey : String;
+		
+		public var CDNUrl:String = "";
 		
 		private function music_completeHandler(event : Event) : void {
 			loadAndPlayMusic();
@@ -101,7 +104,7 @@ package sound {
 			if(_music.channel != null) {
 				_music.stop();
 			}
-			_music.load(new URLRequest(url));
+			_music.load(new URLRequest(CDNUrl + url));
 			_music.play(settindata.musicVolume);
 		}
 
@@ -116,17 +119,17 @@ package sound {
 			if(!_soundIsOpen) {
 				return null;
 			}
-			var sound : Sound = RESManager.getSound(new AssetData(key, soundlibkey));
+			var sound : Sound = RESManager.getSound(new AssetData(key, LibsManager.Instance.soundsLib.key));
 			if(sound == null) {
 				return null;
 			}
 			if (!_soundKeyMap.containsKey(key))
 				_soundKeyMap.put(key, 0);
 			var nowPlayTime : int = getTimer();
-			if ((nowPlayTime - _soundKeyMap.getBy(key)) < 200) return null;
+			if ((nowPlayTime - _soundKeyMap.getBy(key)) < 400) return null;
 			_soundKeyMap.put(key, nowPlayTime);
 			var item : SoundItem = new SoundItem(sound);
-			item.play(settindata.soundVolume * volumePercent);
+			item.play(BztcModel.settingData.soundVolume * volumePercent);
 			item.addEventListener(Event.SOUND_COMPLETE, sound_completeHandler);
 			_list.push(item);
 			return item;
