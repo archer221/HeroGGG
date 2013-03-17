@@ -26,8 +26,7 @@ package Fight.View
 		override protected function set mypanel(value:Panel):void
 		{
 			// TODO Auto Generated method stub
-			sceneview = value as SceneView;
-			//do some thing
+			super.mypanel = value;
 		}
 		
 	}
