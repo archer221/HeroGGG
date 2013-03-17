@@ -1,11 +1,9 @@
-package framework 
+package NotifyBody
 {
+	import com.EngFrameWork.EngObserver.INotifyBody;
 	import com.ui.manager.CallBackFuntion;
-	/**
-	 * ...
-	 * @author ...
-	 */
-	public class BInfoCommand extends BCommand 
+	
+	public class InfoBody implements INotifyBody
 	{
 		public var _infocode : int;
 		public var _sender : Object;
@@ -13,15 +11,17 @@ package framework
 		public var _showtype : int;
 		public var _callback:CallBackFuntion;
 		public var _sInfo : String = null;
-		public function BInfoCommand(tcmd:String,iinfocode : int,sender: Object,tflag: int,tshowtype : int,callbackfunc:CallBackFuntion) 
+		public function InfoBody(iinfocode : int,sender: Object,tflag: int,tshowtype : int,callbackfunc:CallBackFuntion)
 		{
-			super(tcmd);
 			_infocode = iinfocode;
 			_sender = sender;
 			_flag = tflag;
 			_showtype = tshowtype;
 			_callback = callbackfunc;
 		}
+		
+		public function Init():void
+		{
+		}
 	}
-
 }

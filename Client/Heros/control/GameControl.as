@@ -1,24 +1,26 @@
 package control 
 {
-	import framework.BztcFacade;
-	import framework.BztcModel;
+	import com.EngFrameWork.EngMediator.IMediator;
+	import com.EngFrameWork.EngObserver.Notification;
+	import com.frame.ExactTimer;
+	import com.key.HotKey;
+	import com.key.IKeyFliter;
+	import com.key.KeyData;
 	import com.ui.manager.CallBackFuntion;
-	import framework.EventEnum;
-	import com.ui.mediator.IMediator;
-	import flash.events.MouseEvent;
-	import FKPP.Item.ItemType;
+	import com.ui.manager.UIManager;
+	
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.system.IME;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
-	import com.frame.ExactTimer;
-	import com.ui.manager.UIManager;
-	import com.key.HotKey;
-	import com.key.IKeyFliter;
-	import com.key.KeyData;
-	import framework.MediatorMgr;
+	
+	import framework.BztcFacade;
+	import framework.BztcModel;
+	import framework.EventEnum;
+
 	/**
 	 * ...
 	 * @author ...
@@ -39,7 +41,7 @@ package control
 			} else {
 				_hotKey.setActive(Keyboard.RIGHT, true);
 			}
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 		}
 
 		private function hot_right(data : KeyData) : void {
@@ -48,22 +50,22 @@ package control
 			} else {
 				_hotKey.setActive(Keyboard.LEFT, true);
 			}
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 			//_myrole.GameState.ReceiveKeyCode(data);
 		}
 
 		private function up_handler(data : KeyData) : void {
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 			//_myrole.GameState.ReceiveKeyCode(data);
 		}
 
 		private function down_handler(data : KeyData) : void {
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 			//_myrole.GameState.ReceiveKeyCode(data);	
 		}
 
 		private function hot_space(data : KeyData) : void {
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 			//_myrole.GameState.ReceiveKeyCode(data);
 		}
 		
@@ -71,7 +73,7 @@ package control
 		{
 			if (data.isKeyDown)
 			{
-				BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 				//_myrole.GameState.ReceiveKeyCode(data);
 			}
 		}
@@ -80,7 +82,7 @@ package control
 		{
 			if (data.isKeyDown)
 			{
-				BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 				//_myrole.GameState.ReceiveKeyCode(data);
 			}
 		}
@@ -89,7 +91,7 @@ package control
 
 		private function hot_229( data : KeyData ):void
 		{
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 			//if (data.isKeyDown && _view.IsShow()) {
 				//if (BztcUIManager.friendmsgpanel.parent != null) return;
 				//if (_view.battleView._chatinput.parent == null)
@@ -104,7 +106,7 @@ package control
 		}
 		
 		private function hot_enter(data : KeyData) : void {
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 
 //			if (data.isKeyDown &&  MediatorMgr.Instance.commonmainMediator.myShowType == 1) {
 //				if (MediatorMgr.Instance.commonmainMediator.ifGamePutinShow())
@@ -130,7 +132,7 @@ package control
 
 		private function hot_selectWeapon(data : KeyData) : void {
 			if( data.isKeyDown )
-				BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 			//if(data.isKeyDown) {
 				//if (data.keyCode == HotKey.K_Z)
 				//{
@@ -162,12 +164,12 @@ package control
 		private function hot_MDown(data : KeyData) : void
 		{
 			if (!BztcModel.bCanSuperMan) return;
-			BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 		}
 
 		private function hot_useItem(data : KeyData) : void {
 			if( data.isKeyDown )
-				BztcFacade.Instance.AddCommand(new BkeyUseItemCmd(EventEnum.Keyuseitemcommand, data));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keyuseitemcommand, data));
 			//var level:int = BztcModel.myUserData.roleData.roleInfo.baseInfo.Level;
 			//var isvip:Boolean = BztcModel.myUserData.roleData.roleInfo.baseInfo.is_yellow_vip;
 			//if (data.isKeyDown) {
@@ -262,14 +264,14 @@ package control
 
 		private function hot_skip(data : KeyData) : void {
 			if (data.isKeyDown) {
-				BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 				//_myrole.GameState.ReceiveKeyCode(data);
 			}
 		}
 
 		private function hot_exit(data : KeyData) : void {
 			if (data.isKeyDown) {
-				BztcFacade.Instance.AddCommand(new BkeyCommand(EventEnum.Keycommand, data));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.Keycommand, data));
 				//_myrole.GameState.ReceiveKeyCode(data);
 			}
 		}

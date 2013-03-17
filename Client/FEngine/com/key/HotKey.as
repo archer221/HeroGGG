@@ -1,5 +1,4 @@
 package com.key {
-	import BZTC.UI.BztcUIManager;
 	import com.model.Map;
 	import flash.display.Stage;
 	import flash.events.Event;

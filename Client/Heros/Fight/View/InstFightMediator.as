@@ -1,7 +1,7 @@
 package Fight.View
 {
 	import com.ui.containers.Panel;
-	import com.ui.mediator.IMediator;
+	import com.ui.IMediator;
 
 	public class InstFightMediator extends IMediator
 	{

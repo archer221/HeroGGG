@@ -1,5 +1,11 @@
 package framework 
 {
+	import Fight.SceneConfig.SceneTemplateContainer;
+	
+	import NotifyBody.LoadWaitBody;
+	
+	import com.EngFrameWork.EngMediator.IMediator;
+	import com.EngFrameWork.EngObserver.Notification;
 	import com.frame.FrameTimer;
 	import com.frame.TimerManager;
 	import com.model.LocalSO;
@@ -14,7 +20,10 @@ package framework
 	import com.ui.core.EventTargetCollect;
 	import com.ui.manager.CallBackFuntion;
 	import com.ui.manager.ThemeSkinManager;
-	import com.ui.mediator.IMediator;
+	
+	import control.GameControl;
+	
+	import core.TrickSleepModel;
 	
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -23,19 +32,14 @@ package framework
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
-	import mx.core.ByteArrayAsset;
-	
-	import Fight.SceneConfig.SceneTemplateContainer;
-	
-	import control.GameControl;
-	
-	import core.TrickSleepModel;
-	
 	import framework.FKPPInfoCode;
 	
 	import logic.LoginModel;
 	
+	import mx.core.ByteArrayAsset;
+	
 	import sound.SoundManager;
+
 	/**
 	 * ...
 	 * @author ...
@@ -79,7 +83,6 @@ package framework
 		}
 		private function initModels():void
 		{
-			MediatorMgr.Instance.Init();
 			TrickSleepModel.Intance.init();
 			loginmodel.connectserver();
 		}
@@ -90,8 +93,8 @@ package framework
 		private function initEventListener():void
 		{
 			//loading
-			BztcFacade.Instance.AddCmdListener(EventEnum.load_OK, new BCmdHandler(this, OnLoadingOK));
-			BztcFacade.Instance.AddCmdListener(EventEnum.load_Wait, new BCmdHandler(this, OnLoadWaitExec));
+			BztcFacade.Instance.RegisterCommad(EventEnum.load_OK, new BSimpleCmd(this, OnLoadingOK));
+			BztcFacade.Instance.RegisterCommad(EventEnum.load_Wait, new BSimpleCmd(this, OnLoadWaitExec));
 			
 			//FrameTimer.add(Adapter.tSrbComunicator.Server);
 
@@ -111,29 +114,29 @@ package framework
 			_res.removeEventListener(Event.COMPLETE, libs_completeHandler);
 			_res.removeEventListener(RESManager.LoadFileFailed, libs_loadFaildHandler);
 			_res.removeEventListener(ErrorEvent.ERROR, libs_errorHandler);
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_Completed));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_Completed));
 		}
 		
 		private function libs_errorHandler(event : ErrorEvent) : void {
 			_res.removeEventListener(Event.COMPLETE, libs_completeHandler);
 			_res.removeEventListener(RESManager.LoadFileFailed, libs_loadFaildHandler);
 			_res.removeEventListener(ErrorEvent.ERROR, libs_errorHandler);
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_faild));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_faild));
 		}
 		private function libs_loadFaildHandler(event : Event):void
 		{
 			_res.removeEventListener(Event.COMPLETE, libs_completeHandler);
 			_res.removeEventListener(RESManager.LoadFileFailed, libs_loadFaildHandler);
 			_res.removeEventListener(ErrorEvent.ERROR, libs_errorHandler);
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_faild));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_faild));
 		}
 		
-		private function OnLoadWaitExec(cmd : BCommand) :int
+		private function OnLoadWaitExec(cmd : Notification) :int
 		{
-			var bloadcmd : LoadWaitCmd = cmd as LoadWaitCmd;
-			if ( bloadcmd != null )
+			var loadwaitbody : LoadWaitBody = cmd.getBody() as LoadWaitBody;
+			if ( loadwaitbody != null )
 			{
-				return StartLoading(bloadcmd._loadlibary, bloadcmd._loadtype, bloadcmd._callback);
+				return StartLoading(loadwaitbody._loadlibary, loadwaitbody._loadtype, loadwaitbody._callback);
 			}
 			return 1;
 		}
@@ -142,19 +145,20 @@ package framework
 		{
 			if ( BztcFacade.Instance.Suspended )
 			{
-				BztcFacade.Instance.AddCommand(new LoadWaitCmd(EventEnum.load_Wait,new Array(),loadmodel.LoadType,null));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_Wait,
+					new LoadWaitBody(new Array(),loadmodel.LoadType,null),null));
 				return 0;
 			}
 			_callbackfunc = null;
 			BztcFacade.Instance.bNeedSuspend = true;
 			BztcFacade.Instance.Suspended = true;
 			loadmodel.addEventListener(Event.COMPLETE, OnServerLoadModelCommplete);
-			BztcFacade.Instance.AddCommand(new BServerLoadCommand(EventEnum.load_startLoading,loadmodel));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_startLoading,loadmodel,null));
 			return 0;
 		}
 		public function OnServerLoadModelCommplete(e : Event) :void
 		{
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_Completed));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_Completed));
 		}
 		
 		private var _callbackfunc : CallBackFuntion;
@@ -162,7 +166,7 @@ package framework
 		{
 			if ( BztcFacade.Instance.Suspended )
 			{
-				BztcFacade.Instance.AddCommand(new LoadWaitCmd(EventEnum.load_Wait,libsary,loadtype,tcallback));
+				BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_Wait,new LoadWaitBody(libsary,loadtype,tcallback),null));
 				return 0;
 			}
 			if ( libsary == null || libsary.length <= 0 ) return -1;
@@ -184,11 +188,11 @@ package framework
 			_res.model.LoadType = loadtype;
 			_res.addEventListener(Event.COMPLETE, libs_completeHandler);
 			_res.addEventListener(RESManager.LoadFileFailed, libs_loadFaildHandler);
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_startLoading));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_startLoading));
 			return 0;
 		}
 		
-		public function OnLoadingOK(cmd : BCommand):void
+		public function OnLoadingOK(cmd :Notification):void
 		{
 			if( BztcFacade.Instance.bNeedSuspend && BztcFacade.Instance.Suspended )
 				BztcFacade.Instance.Suspended = false;
@@ -209,7 +213,7 @@ package framework
 		public function OnFirstLoadingOK(ary : Array):void
 		{
 			SomeThingAfterFirstLoad();
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_rolecreatorOK));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_rolecreatorOK));
 		}
 		///////////////////////////////////game update////////////////////////////////////////////
 		private var _curTime : int = 0;
@@ -220,9 +224,9 @@ package framework
 			if ( _curTime == 0 ) {
 				_curTime = now;//_time.currentCount;
 			}
-			var elaptime = now - _curTime;
+			var elaptime : int = now - _curTime;
 			_pingelapsetime += elaptime;
-			MediatorMgr.Instance.update(elaptime);
+//			MediatorMgr.Instance.update(elaptime);
 			_curTime = now;
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////

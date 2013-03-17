@@ -1,18 +1,22 @@
-package com.ui.mediator 
+package com.EngFrameWork.EngMediator 
 {
+	import com.EngFrameWork.EngObserver.INotifier;
 	import com.net.RESManager;
 	import com.ui.containers.Panel;
 	import com.ui.core.Align;
 	import com.ui.layout.GLayout;
 	import com.ui.manager.CallBackFuntion;
+	
 	import flash.display.Sprite;
+	
 	import framework.BztcModel;
 	import framework.LoadTypeEnum;
+
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class IMediator 
+	public class IMediator implements INotifier
 	{
 		protected var _parent : Sprite;
 		protected var _bloadOK : Boolean = false;
@@ -87,6 +91,11 @@ package com.ui.mediator
 		{
 			
 		}
+		public function sendNotification( notificationName:String, body:Object=null, type:String=null ):void
+		{
+			
+		}
+		
 	}
 
 }

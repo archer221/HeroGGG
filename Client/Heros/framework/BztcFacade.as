@@ -1,15 +1,18 @@
 package framework 
 {
+	import com.EngFrameWork.EngObserver.Notification;
 	import com.frame.ExactTimer;
 	import com.frame.FrameTimer;
 	import com.frame.IFrame;
 	import com.model.Map;
 	import com.project.Game;
 	import com.ui.core.EventDispatcherEx;
-	import flash.utils.getTimer;
+	
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import flash.utils.getTimer;
+
 	/**
 	 * ...
 	 * @author ...
@@ -35,29 +38,29 @@ package framework
 		private var logicCmdList : Array = new Array();
 		private var ExceptMap : Map = new Map();
 		private var ListenerMap : Map = new Map();
-		public function AddCommand(cmd : BCommand) :void
+		public function SendNotification(note :Notification) :void
 		{
-			logicCmdList.push(cmd);
+			logicCmdList.push(note);
 		}
-		public function AddExceptCmdListener(scmd : String, cmdhandler : BCmdHandler):void
+		public function RegisterExceptCmd(scmd : String, cmdhandler : BSimpleCmd):void
 		{
 			ExceptMap.put(scmd, cmdhandler);
 		}
 		
-		public function AddCmdListener(scmd : String,cmdHandler : BCmdHandler):void
+		public function RegisterCommad(scmd : String,cmd :ICommand):void
 		{
 			var ary :Array = ListenerMap.getBy(scmd) as Array;
 			if ( ary != null )
 			{
 				var needdelary : Array = new Array();
-				for each( var cmdhand : BCmdHandler in ary )
+				for each( var cmdhand : ICommand in ary )
 				{
-					if ( cmdhand.Obj == cmdHandler.Obj )
+					if ( cmdhand._owner == cmd._owner )
 					{
 						needdelary.push(cmdhand);
 					}
 				}
-				for each(var cmdhand : BCmdHandler in needdelary)
+				for each(var cmdhand : ICommand in needdelary)
 				{
 					var idx : int = ary.indexOf(cmdhand);
 					if ( idx != -1 )
@@ -65,29 +68,29 @@ package framework
 						ary.splice(idx, 1);
 					}
 				}
-				ary.push(cmdHandler);
+				ary.push(cmd);
 			}
 			else {
 				ary = new Array();
-				ary.push(cmdHandler);
+				ary.push(cmd);
 				ListenerMap.put(scmd, ary);
 			}
 			
 		}
-		public function RemoveCmdListener(scmd : String,obj : Object):void
+		public function UnReigisterCmd(scmd : String,obj : Object):void
 		{
 			var ary :Array = ListenerMap.getBy(scmd) as Array;
 			if ( ary != null )
 			{
 				var needdelary : Array = new Array();
-				for each( var cmdhand : BCmdHandler in ary )
+				for each( var cmdhand : BSimpleCmd in ary )
 				{
 					if ( cmdhand.Obj == obj )
 					{
 						needdelary.push(cmdhand);
 					}
 				}
-				for each(var cmdhand : BCmdHandler in needdelary)
+				for each(var cmdhand : BSimpleCmd in needdelary)
 				{
 					var idx : int = ary.indexOf(cmdhand);
 					if ( idx != -1 )
@@ -106,28 +109,29 @@ package framework
 				lastupdatetime = curtime;
 			}
 			BztcModel.Instance.Update();
+			BztcViewer.instance.Update();
 			var elapsetime : int = 0;
-			var cmd : BCommand = null;
+			var note :Notification = null;
 			while ( elapsetime < delayTime && logicCmdList.length > 0 )
 			{
 				var inow : int = getTimer();
-				cmd = logicCmdList.shift();
-				//if ( cmd != null )
+				note = logicCmdList.shift();
+				//if ( note != null )
 				//{
-					//trace(cmd.scmd);
-					//if ( cmd.scmd == EventEnum.load_startLoading && bNeedSuspend)
+					//trace(note.scmd);
+					//if ( note.scmd == EventEnum.load_startLoading && bNeedSuspend)
 					//{
 						//_bsuspend = true;
 					//}
-					//if ( cmd.scmd == EventEnum.load_Completed && bNeedSuspend)
+					//if ( note.scmd == EventEnum.load_Completed && bNeedSuspend)
 					//{
 						//_bsuspend = false;
 					//}
 				//}
-				if ( ExceptMap.containsKey(cmd.scmd) )
+				if ( ExceptMap.containsKey(note.getName()) )
 				{
-					var handler : BCmdHandler = ExceptMap.getBy(cmd.scmd);
-					var bresult : int = handler.Exec(cmd);
+					var handler : BSimpleCmd = ExceptMap.getBy(note.getName());
+					var bresult : int = handler.Exec(note);
 					switch( bresult )
 					{
 					case FKPPInfoCode.SystemSkipEvent:
@@ -138,13 +142,13 @@ package framework
 					case FKPPInfoCode.SystemStopSuspend:
 						{
 							_bsuspend = false;
-							AddCommand(new BCommand(EventEnum.SystemStopSuspend));
+							SendNotification(new Notification(EventEnum.SystemStopSuspend));
 							elapsetime += (getTimer() - inow);
 							break;
 						}
 					case FKPPInfoCode.SystemWaitSuspend:
 						{
-							AddCommand(cmd);
+							SendNotification(note);
 							return;
 						}
 					case FKPPInfoCode.SystemIgnoreSuspend:
@@ -155,12 +159,12 @@ package framework
 					}
 				}
 
-				var ary :Array = ListenerMap.getBy(cmd.scmd) as Array;
+				var ary :Array = ListenerMap.getBy(note.getName()) as Array;
 				if ( ary != null && ary.length > 0 )
 				{
-					for each( var cmdhandler : BCmdHandler in ary )
+					for each( var cmdhandler : ICommand in ary )
 					{
-						cmdhandler.Exec(cmd);
+						cmdhandler.Exec(note);
 					}
 				}
 				elapsetime += (getTimer() - inow);
@@ -191,10 +195,10 @@ package framework
 			//village
 			//BztcFacade.Instance.AddExceptCmdListener(EventEnum.server_EnterVillage, new BCmdHandler(this, OnExceptionCmdHandlerWait));
 			//load
-			BztcFacade.Instance.AddExceptCmdListener(EventEnum.load_Wait, new BCmdHandler(this, OnExceptionCmdHandlerWait));
+			BztcFacade.Instance.RegisterExceptCmd(EventEnum.load_Wait, new BSimpleCmd(this, OnExceptionCmdHandlerWait));
 		}
 		///////////////////////////////////Exception Handler////////////////////////////////////////
-		public function OnExceptionCmdHandlerWait(cmd :BCommand):int
+		public function OnExceptionCmdHandlerWait(note :Notification):int
 		{
 			if ( BztcFacade.Instance.Suspended )
 			{
@@ -202,7 +206,7 @@ package framework
 			}
 			return FKPPInfoCode.SystemIgnoreSuspend;
 		}
-		public function OnExceptionCmdHandlerSkip(cmd : BCommand):int
+		public function OnExceptionCmdHandlerSkip(cmd : ICommand):int
 		{
 			if ( BztcFacade.Instance.Suspended )
 			{
@@ -210,7 +214,7 @@ package framework
 			}
 			return FKPPInfoCode.SystemIgnoreSuspend;	
 		}
-		public function OnExceptionCmdHandlerStop(cmd : BCommand):int
+		public function OnExceptionCmdHandlerStop(cmd : ICommand):int
 		{
 			if ( BztcFacade.Instance.Suspended )
 			{

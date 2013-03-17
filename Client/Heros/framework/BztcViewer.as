@@ -1,9 +1,13 @@
 package framework 
 {
 
-	import framework.FKPPInfoCode;
+	import NotifyBody.InfoBody;
+	
+	import com.EngFrameWork.EngMediator.IMediator;
+	import com.EngFrameWork.EngObserver.Notification;
 	import com.model.Map;
 	import com.net.AssetData;
+	import com.net.LoadModel;
 	import com.net.RESManager;
 	import com.net.ServerLoadModel;
 	import com.ui.controls.Alert;
@@ -12,13 +16,18 @@ package framework
 	import com.ui.core.UIComponentData;
 	import com.ui.data.AlertData;
 	import com.ui.manager.UIManager;
-	import com.ui.mediator.IMediator;
 	import com.utils.GStringUtil;
+	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
+	import flash.utils.getTimer;
+	
+	import framework.FKPPInfoCode;
+	
 	import loading.FKPPLoadMonitor;
+
 	/**
 	 * 控制BztcUIManager和BztcFacade进行交互
 	 * @author ...
@@ -28,13 +37,12 @@ package framework
 		public static var instance : BztcViewer = new BztcViewer();
 		
 		private var _load_lm :FKPPLoadMonitor;
-		private var _bg : Poster;
-		public var mediatorMap : Map = new Map();
-		
+		private var _bg : Poster;	
 		public var IconLoading : Sprite;
 		public var roleLoading : Sprite;
 		public var avatarLoading : Sprite;
 		public var info : Alert;
+		public var mediatorMap : Map = new Map();
 		//public var rolemenu : RoleMenu;
 		
 		public function BztcViewer() 
@@ -67,8 +75,8 @@ package framework
 			info = new Alert(data);
 			
 			info.addEventListener(Event.CLOSE, OnClientAlertInfoClose_Handler);
-			BztcFacade.Instance.AddCmdListener(EventEnum.EventInfo, new BCmdHandler(this, OnGameInfo));
-			BztcFacade.Instance.AddCmdListener(EventEnum.HideInfo, new BCmdHandler(this, OnGameInfoHide));
+			BztcFacade.Instance.RegisterCommad(EventEnum.EventInfo, new BSimpleCmd(this, OnGameInfo));
+			BztcFacade.Instance.RegisterCommad(EventEnum.HideInfo, new BSimpleCmd(this, OnGameInfoHide));
 		}
 		
 		public function resetAlert():void
@@ -137,9 +145,9 @@ package framework
 			InitInfo();
 			//InitRoleMenu();
 			InitBg();
-			BztcFacade.Instance.AddCmdListener(EventEnum.load_startLoading, new BCmdHandler(this, OnStartLoading));
-			BztcFacade.Instance.AddCmdListener(EventEnum.load_faild, new BCmdHandler(this, OnLoadFaild));
-			BztcFacade.Instance.AddCmdListener(EventEnum.load_Completed, new BCmdHandler(this, OnLoadComplete));
+			BztcFacade.Instance.RegisterCommad(EventEnum.load_startLoading, new BSimpleCmd(this, OnStartLoading));
+			BztcFacade.Instance.RegisterCommad(EventEnum.load_faild, new BSimpleCmd(this, OnLoadFaild));
+			BztcFacade.Instance.RegisterCommad(EventEnum.load_Completed, new BSimpleCmd(this, OnLoadComplete));
 		}
 		
 		public function InitBg():void
@@ -152,15 +160,15 @@ package framework
 			BztcFacade.Instance.bztcgame.addChild(_bg);
 			_bg.model.source = [new AssetData("BlackBack", "system")];
 		}
-		public function OnStartLoading(cmd : BCommand):int
+		public function OnStartLoading(cmd :Notification):int
 		{
 			if ( _load_lm == null)
 			{
 				_load_lm = new FKPPLoadMonitor(BztcFacade.Instance.bztcgame);
 			}
-			if ( cmd is BServerLoadCommand )
+			if ( cmd.getBody() is LoadModel )
 			{
-				_load_lm.model = (cmd as BServerLoadCommand)._loadmodel;
+				_load_lm.model = cmd.getBody() as LoadModel;
 				_load_lm.show();
 			}
 			else
@@ -178,7 +186,7 @@ package framework
 			return _load_lm;
 		}
 		
-		public function OnLoadFaild( cmd : BCommand ):int
+		public function OnLoadFaild( cmd : ICommand ):int
 		{
 			var data : AlertData = new AlertData();
 			data.padding =15;
@@ -202,14 +210,14 @@ package framework
 			}
 		}
 		
-		private function OnLoadComplete( cmd : BCommand ):int
+		private function OnLoadComplete( cmd : ICommand ):int
 		{
 			_load_lm.hide();
 			if ( _load_lm.model is ServerLoadModel )
 			{
 				_load_lm.model.removeEventListener(Event.COMPLETE, BztcModel.Instance.OnServerLoadModelCommplete);
 			}
-			BztcFacade.Instance.AddCommand(new BCommand(EventEnum.load_OK));
+			BztcFacade.Instance.SendNotification(new Notification(EventEnum.load_OK));
 			return 0;
 		}
 		/////////////////////////////////////////net error ui////////////////////////////////////////
@@ -246,15 +254,15 @@ package framework
 			BztcViewer.instance.info.show();
 			BztcViewer.instance.info.Sender = this;
 		}
-		public function OnGameInfoHide(cmd : BCommand) :int
+		public function OnGameInfoHide(cmd : ICommand) :int
 		{
 			info.hide();
 			return 0;
 		}
-		private var curinfocmd : BInfoCommand;
-		public function OnGameInfo(cmd : BCommand) : int
+		private var curinfocmd : InfoBody;
+		public function OnGameInfo(cmd :Notification) : int
 		{
-			var infocmd : BInfoCommand = cmd as BInfoCommand;
+			var infocmd :InfoBody = cmd.getBody() as InfoBody;
 			if ( infocmd != null )
 			{
 				curinfocmd = infocmd;
@@ -277,14 +285,9 @@ package framework
 			return 0;
 		}
 		
-		public function OnGameError( cmd : BCommand ):int
+		public function OnGameError( cmd :Notification ):int
 		{
-			var svcmd : BSvErrorCmd = cmd as BSvErrorCmd;
-			if ( svcmd != null )
-			{
-				GameError(svcmd.cmdcode);	
-			}
-			
+			GameError(int(cmd.getBody()));	
 			return 0;
 		}
 		private function GameError(value : int): void {
@@ -315,7 +318,7 @@ package framework
 			//rolemenu.hide();
 		//}
 		/////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////logic////////////////////////////////////////////////////////
+		////////////////////////////////Mediator////////////////////////////////////////////////////////
 		private function InitMediator():void
 		{
 			//CreateRole
@@ -323,10 +326,37 @@ package framework
 			//mediatorMap.put("CreateRolepanel", tmediator);
 			//MediatorMgr.Instance.createroleMediator;
 		}
+		public function HideAll():void
+		{
+			for each( var imediator : IMediator in mediatorMap.values)
+			{
+				if( imediator.IsShow() )
+					imediator.Hide();
+			}
+		}
 		
+		public function updatemediator(elpasetime : int):void
+		{
+			for each( var imediator : IMediator in mediatorMap.values)
+			{
+				if( imediator.IsShow() )
+					imediator.update(elpasetime);
+			}
+		}
 		public function GetMediator(panelname : String): IMediator
 		{
 			return mediatorMap.getBy(panelname);
+		}
+		private var _curTime : int = 0;
+		public function Update():void
+		{
+			var now : int = getTimer();
+			if ( _curTime == 0 ) {
+				_curTime = now;//_time.currentCount;
+			}
+			var elaptime = now - _curTime;
+			updatemediator(elaptime);
+			_curTime = now;
 		}
 ///////////////////////////////////////////////////////////////////////////////////////////
 	}
